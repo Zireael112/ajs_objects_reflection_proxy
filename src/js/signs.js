@@ -1,21 +1,12 @@
 export default function orderByProps({ ...iterObj }, settings) {
-  const result = [];
-  for (const setting of settings) {
-    const template = { key: setting, value: iterObj[setting] };
-    result.push(template);
-    delete iterObj[setting];
-  }
-
-  const sortedKeys = Object.keys(iterObj).sort();
-
-  for (const key of sortedKeys) {
-    for (const org in iterObj) {
-      if (key === org) {
-        const template = { key: org, value: iterObj[org] };
-        result.push(template);
+  const keysObj = Object.keys(iterObj).filter((word) => !settings.includes(word));
+  const keySorted = [...keysObj].sort();
+  const concatObj = [...settings, ...keySorted].map((x) => {
+    for (const value in iterObj) {
+      if (x === value) {
+        return { key: x, value: iterObj[value] };
       }
     }
-  }
-
-  return result;
+  });
+  return concatObj;
 }
